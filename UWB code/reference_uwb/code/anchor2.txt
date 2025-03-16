@@ -1,0 +1,89 @@
+/**
+ * 
+ * @todo
+ *  - move strings to flash (less RAM consumption)
+ *  - fix deprecated convertation form string to char* startAsAnchor
+ *  - give example description
+ */
+ #include "U8glib.h"
+
+#include <SPI.h>
+#include "DW1000Ranging.h"
+#define ANCHOR_ADD "82:17:5B:D5:A9:9A:E2:9C"
+// connection pins
+const uint8_t PIN_RST = 9; // reset pin
+const uint8_t PIN_IRQ = 2; // irq pin
+const uint8_t PIN_SS = SS; // spi select pin
+float d;
+char t[10];
+U8GLIB_SSD1306_128X64 u8g(U8G_I2C_OPT_NONE);
+
+void setup() {
+ // Serial.begin(9600);
+  delay(1000);
+  oled_init();
+  //init the configuration
+  DW1000Ranging.initCommunication(PIN_RST, PIN_SS, PIN_IRQ); //Reset, CS, IRQ pin
+  //define the sketch as anchor. It will be great to dynamically change the type of module
+  DW1000Ranging.attachNewRange(newRange);
+  DW1000Ranging.attachBlinkDevice(newBlink);
+  DW1000Ranging.attachInactiveDevice(inactiveDevice);
+  //Enable the filter to smooth the distance
+  //DW1000Ranging.useRangeFilter(true);
+  
+  //we start the module as an anchor
+  DW1000Ranging.startAsAnchor(ANCHOR_ADD, DW1000.MODE_LONGDATA_RANGE_ACCURACY,false);
+}
+
+void loop() {
+  DW1000Ranging.loop();
+  
+}
+void oled_init()
+{
+ if ( u8g.getMode() == U8G_MODE_R3G3B2 ) {
+    u8g.setColorIndex(255);     // white
+  }
+  else if ( u8g.getMode() == U8G_MODE_GRAY2BIT ) {
+    u8g.setColorIndex(3);         // max intensity
+  }
+  else if ( u8g.getMode() == U8G_MODE_BW ) {
+    u8g.setColorIndex(1);         // pixel on
+  }
+  else if ( u8g.getMode() == U8G_MODE_HICOLOR ) {
+    u8g.setHiColorByRGB(255,255,255);
+  }
+}
+void draw(float d)
+{   
+    u8g.setFont(u8g_font_unifont);
+  dtostrf(d, 4, 2, t);
+   u8g.firstPage();  
+  do {
+      // graphic commands to redraw the complete screen should be placed here  
+
+
+  u8g.drawStr( 0, 22, t);
+  } while( u8g.nextPage() );
+}
+void newRange() {
+ // Serial.print("from: "); Serial.print(DW1000Ranging.getDistantDevice()->getShortAddress(), HEX);
+ // Serial.print("\t Range: "); Serial.print(DW1000Ranging.getDistantDevice()->getRange()); Serial.print(" m");
+ // Serial.print("\t RX power: "); Serial.print(DW1000Ranging.getDistantDevice()->getRXPower()); Serial.println(" dBm");
+ d = DW1000Ranging.getDistantDevice()->getRange();
+ draw(d);
+}
+
+void newBlink(DW1000Device* device) {
+//  Serial.print("blink; 1 device added ! -> ");
+ // Serial.print(" short:");
+ // Serial.println(device->getShortAddress(), HEX);
+}
+
+void inactiveDevice(DW1000Device* device) {
+ // Serial.print("delete inactive device: ");
+ // Serial.println(device->getShortAddress(), HEX);
+}
+
+
+

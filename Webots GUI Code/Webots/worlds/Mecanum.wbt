@@ -1,0 +1,447 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/floors/protos/RectangleArena.proto"
+
+WorldInfo {
+  basicTimeStep 4
+  contactProperties [
+    ContactProperties {
+      material1 "InteriorWheelMat"
+      coulombFriction [
+        0, 2, 0
+      ]
+      frictionRotation -0.785398 0
+      bounce 0
+      forceDependentSlip [
+        10, 0
+      ]
+    }
+    ContactProperties {
+      material1 "ExteriorWheelMat"
+      coulombFriction [
+        0, 2, 0
+      ]
+      frictionRotation 0.785398 0
+      bounce 0.4
+    }
+  ]
+}
+Viewpoint {
+  orientation -0.5792651744253934 0.5792651581272686 0.5735012940505968 2.100183093120571
+  position 1.9997538066631904 2.102252073930054 9.319508516476239
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  floorSize 20 20
+  floorTileSize 20 20
+}
+Robot {
+  translation 2 2 0.0645
+  children [
+    InertialUnit {
+      translation 0 0 0.04
+      children [
+        Solid {
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 1 0
+                metalness 0
+              }
+              geometry Cone {
+                bottomRadius 0.05
+                height 0.1
+              }
+            }
+          ]
+        }
+      ]
+      rotationStep 0.01
+    }
+    Pen {
+      translation 0 0 -0.05
+      children [
+        Solid {
+          children [
+            Shape {
+              appearance PBRAppearance {
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.05
+                radius 0.05
+              }
+            }
+          ]
+        }
+      ]
+      inkColor 0 0 1
+      inkDensity 1
+      leadSize 0.05
+    }
+    GPS {
+      children [
+        Solid {
+          children [
+            Shape {
+              appearance PBRAppearance {
+                metalness 0
+              }
+              geometry Sphere {
+                radius 0.02
+              }
+            }
+          ]
+        }
+      ]
+      accuracy 0.02
+      noiseCorrelation 0.8
+    }
+    Group {
+      children [
+        Shape {
+          appearance DEF LIGHT_GRAY PBRAppearance {
+            baseColor 0.78 0.78 0.78
+            roughness 0.1
+            metalness 0.3
+          }
+          geometry Mesh {
+            url [
+              "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/robots/rec/fabtino/protos/meshes/base_central.dae"
+            ]
+          }
+        }
+        Shape {
+          appearance DEF DARK_GRAY PBRAppearance {
+            baseColor 0.43 0.43 0.43
+            roughness 0.1
+            metalness 0.3
+          }
+          geometry Mesh {
+            url [
+              "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/robots/rec/fabtino/protos/meshes/base.dae"
+            ]
+          }
+        }
+      ]
+    }
+    DEF HJ_FR HingeJoint {
+      jointParameters HingeJointParameters {
+        position -23.5861077621614
+        axis 0 1 0
+        anchor 0.285061 -0.235818 0.035257
+      }
+      device [
+        RotationalMotor {
+          name "front_right_wheel_joint"
+          maxVelocity 100
+          maxTorque 100
+        }
+        PositionSensor {
+          name "front_right_wheel_joint_sensor"
+        }
+      ]
+      endPoint Solid {
+        translation 0.285061 -0.235818 0.035257
+        rotation 0 1 0 1.546633466556945
+        children [
+          DEF WHEEL_FR Group {
+            children [
+              Shape {
+                appearance DEF WHEEL_APPEARANCE PBRAppearance {
+                  baseColor 0.49 0.49 0.49
+                  roughness 0.3
+                  metalness 0.2
+                }
+                geometry DEF WHEEL_RIGHT Mesh {
+                  url [
+                    "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/robots/rec/fabtino/protos/meshes/wheel1.dae"
+                  ]
+                }
+              }
+              Shape {
+                appearance DEF ROLLERS_APPEARANCE PBRAppearance {
+                  baseColor 0.24 0.24 0.24
+                  roughness 0.9
+                  metalness 0
+                }
+                geometry DEF ROLLERS_RIGHT Mesh {
+                  url [
+                    "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/robots/rec/fabtino/protos/meshes/rollers1.dae"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+        name "wheel_fr"
+        contactMaterial "InteriorWheelMat"
+        boundingObject Pose {
+          translation 0 -0.0172 0
+          rotation 1 0 0 1.5708
+          children [
+            DEF BO_WHEEL Cylinder {
+              height 0.07
+              radius 0.1
+            }
+          ]
+        }
+        physics DEF PHYSICS_WHEEL Physics {
+        }
+      }
+    }
+    DEF HJ_BR HingeJoint {
+      jointParameters HingeJointParameters {
+        position -47.32883416996175
+        axis 0 1 0
+        anchor -0.284897 -0.238057 0.03513
+      }
+      device [
+        RotationalMotor {
+          name "back_right_wheel_joint"
+          maxVelocity 100
+          maxTorque 100
+        }
+        PositionSensor {
+          name "back_right_wheel_joint_sensor"
+        }
+      ]
+      endPoint Solid {
+        translation -0.284897 -0.238057 0.03513
+        rotation 0 0.9999999999999999 0 2.93664828747494
+        children [
+          DEF WHEEL_BR Group {
+            children [
+              Shape {
+                appearance USE WHEEL_APPEARANCE
+                geometry DEF WHEEL_LEFT Mesh {
+                  url [
+                    "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/robots/rec/fabtino/protos/meshes/wheel2.dae"
+                  ]
+                }
+              }
+              Shape {
+                appearance USE ROLLERS_APPEARANCE
+                geometry DEF ROLLERS_LEFT Mesh {
+                  url [
+                    "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/robots/rec/fabtino/protos/meshes/rollers2.dae"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+        name "wheel_br"
+        contactMaterial "ExteriorWheelMat"
+        boundingObject Pose {
+          translation 0 -0.015 0
+          rotation 1 0 0 1.5708
+          children [
+            USE BO_WHEEL
+          ]
+        }
+        physics USE PHYSICS_WHEEL
+      }
+    }
+    DEF HJ_FL HingeJoint {
+      jointParameters HingeJointParameters {
+        position 42.47984515433187
+        axis 0 1 0
+        anchor 0.284897 0.238057 0.03513
+      }
+      device [
+        RotationalMotor {
+          name "front_left_wheel_joint"
+          maxVelocity 100
+          maxTorque 100
+        }
+        PositionSensor {
+          name "front_left_wheel_joint_sensor"
+        }
+      ]
+      endPoint Solid {
+        translation 0.284897 0.238057 0.03513
+        rotation 0 0.9999999999999999 0 4.78073331125435
+        children [
+          DEF WHEEL_FL Group {
+            children [
+              Shape {
+                appearance USE ROLLERS_APPEARANCE
+                geometry USE ROLLERS_LEFT
+              }
+              Shape {
+                appearance USE WHEEL_APPEARANCE
+                geometry USE WHEEL_LEFT
+              }
+            ]
+          }
+        ]
+        name "wheel_fl"
+        contactMaterial "ExteriorWheelMat"
+        boundingObject Pose {
+          translation 0 0.015 0
+          rotation 1 0 0 1.5708
+          children [
+            USE BO_WHEEL
+          ]
+        }
+        physics USE PHYSICS_WHEEL
+      }
+    }
+    DEF HJ_BL HingeJoint {
+      jointParameters HingeJointParameters {
+        position 61.84078497485288
+        axis 0 1 0
+        anchor -0.285061 0.235818 0.035257
+      }
+      device [
+        RotationalMotor {
+          name "back_left_wheel_joint"
+          maxVelocity 100
+          maxTorque 100
+        }
+        PositionSensor {
+          name "back_left_wheel_joint_sensor"
+        }
+      ]
+      endPoint Solid {
+        translation -0.285061 0.235818 0.035257
+        rotation 0 -1 0 0.9910680969429844
+        children [
+          DEF WHEEL_BL Group {
+            children [
+              Shape {
+                appearance USE WHEEL_APPEARANCE
+                geometry USE WHEEL_RIGHT
+              }
+              Shape {
+                appearance USE ROLLERS_APPEARANCE
+                geometry USE ROLLERS_RIGHT
+              }
+            ]
+          }
+        ]
+        name "wheel_bl"
+        contactMaterial "InteriorWheelMat"
+        boundingObject Pose {
+          translation 0 0.0172 0
+          rotation 1 0 0 1.5708
+          children [
+            USE BO_WHEEL
+          ]
+        }
+        physics USE PHYSICS_WHEEL
+      }
+    }
+    DEF IMU Pose {
+      children [
+        Accelerometer {
+          lookupTable [
+            -100 -100 -0.002
+            100 100 0.002
+          ]
+        }
+        Gyro {
+          lookupTable [
+            -100 -100 -0.002
+            100 100 0.002
+          ]
+        }
+        Compass {
+          lookupTable [
+            -1 -1 -0.2
+            1 1 0.2
+          ]
+        }
+      ]
+    }
+    Pose {
+      translation 0 0 0.145
+    }
+    Pose {
+      translation 0.365 0 0.161
+    }
+    Pose {
+      translation -0.365 0 0.161
+      rotation 0 0 1 3.14159
+    }
+  ]
+  name "Fabtino"
+  boundingObject Group {
+    children [
+      DEF FRAME_CENTER Pose {
+        translation 0 0 -0.0115
+        children [
+          Box {
+            size 0.726 0.63 0.031
+          }
+        ]
+      }
+      DEF FRAME_SIDES Pose {
+        translation 0 0 -0.0115
+        children [
+          Box {
+            size 0.87 0.486 0.031
+          }
+        ]
+      }
+      DEF FRAME_CORNER_FL Pose {
+        translation 0.363 0.243 -0.0115
+        children [
+          DEF FRAME_CORNER_CYLINDER Cylinder {
+            height 0.031
+            radius 0.072
+          }
+        ]
+      }
+      DEF FRAME_CORNER_FR Pose {
+        translation -0.363 0.243 -0.0115
+        children [
+          USE FRAME_CORNER_CYLINDER
+        ]
+      }
+      DEF FRAME_CORNER_BL Pose {
+        translation 0.363 -0.243 -0.0115
+        children [
+          USE FRAME_CORNER_CYLINDER
+        ]
+      }
+      DEF FRAME_CORNER_BR Pose {
+        translation -0.363 -0.243 -0.0115
+        children [
+          USE FRAME_CORNER_CYLINDER
+        ]
+      }
+      Pose {
+        translation 0 0 0.062
+        children [
+          Box {
+            size 0.343 0.603 0.167
+          }
+        ]
+      }
+      Pose {
+        translation 0 0 0.062
+        children [
+          Box {
+            size 0.843 0.423 0.167
+          }
+        ]
+      }
+    ]
+  }
+  physics Physics {
+    density -1
+    mass 5
+    centerOfMass [
+      0 0 0
+    ]
+  }
+  rotationStep 0.01
+  controller "controller_1"
+}
